@@ -16,13 +16,18 @@ def get_local_info():
         return "Unknown", "127.0.0.1"
 
 def get_ping_latency(host):
+    if host == "192.168.1.1":
+        return None
+        
     try:
-        output = subprocess.check_output(
-            f"ping -n 1 -w 800 {host}", 
-            shell=True, stderr=subprocess.STDOUT
-        ).decode('gbk')
-        match = re.search(r"time[=<](\d+)ms", output) or re.search(r"时间[=<](\d+)ms", output)
-        return int(match.group(1)) if match else None
+        url = f"https://{host}" if not host.startswith('http') else host
+        
+        start_time = time.time()
+        response = requests.head(url, timeout=2)
+        end_time = time.time()
+        
+        latency = int((end_time - start_time) * 1000)
+        return latency
     except:
         return None
 
@@ -197,4 +202,5 @@ while True:
     st.session_state.multi_history = pd.concat([st.session_state.multi_history, new_row], ignore_index=True).iloc[-max_points:]
     with chart_placeholder:
         st.line_chart(st.session_state.multi_history.set_index('Time'))
+
     time.sleep(update_interval)
