@@ -116,11 +116,12 @@ with st.sidebar.expander("👤 Network Identity", expanded=True):
 
 st.sidebar.header("⚙️ Configuration")
 default_sites = {
-    "Baidu": "www.baidu.com",
-    "Bilibili": "www.bilibili.com",
-    "GitHub": "www.github.com",
-    "Steam": "store.steampowered.com",
-    "Gateway": "192.168.1.1"
+    "Google (Global)": "www.google.com",
+    "YouTube (Media)": "www.youtube.com",
+    "Amazon (Cloud/EC2)": "www.amazon.com",
+    "GitHub (DevOps)": "www.github.com",
+    "Cloudflare (Edge)": "1.1.1.1" 
+}
 }
 selected_sites = st.sidebar.multiselect("Targets", options=list(default_sites.keys()), default=list(default_sites.keys()))
 update_interval = st.sidebar.slider("Interval (sec)", 1, 10, 2)
