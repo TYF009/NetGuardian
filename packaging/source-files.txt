@@ -6,6 +6,7 @@ Dockerfile
 LICENSE
 NOTICE.md
 README.md
+README.zh-CN.md
 agent/__init__.py
 agent/client.py
 agent/config.example.json

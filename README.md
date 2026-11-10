@@ -1,5 +1,7 @@
 # NetGuardian — Network Diagnostics & Evidence-Based Troubleshooting Platform
 
+**English** · [简体中文](README.zh-CN.md)
+
 NetGuardian helps IT teams investigate why a service is unreachable by checking
 each layer of the connection and keeping a record of what each check found.
 
