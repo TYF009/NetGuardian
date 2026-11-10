@@ -1,0 +1,18 @@
+.git
+.venv
+web
+__pycache__
+**/__pycache__
+*.db
+*.db-*
+.env
+agent/config.local.json
+
+# Local validation artifacts may contain reports, credentials and downloaded tools.
+.pytest_cache
+.ruff_cache
+.mypy_cache
+*.log
+Felix.jpg
+
+.netguardian-local/

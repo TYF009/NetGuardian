@@ -1,0 +1,65 @@
+name: netguardian
+x-control-environment: &control-environment
+  NETGUARDIAN_DATABASE_URL: postgresql+psycopg://netguardian:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@db:5432/netguardian
+  NETGUARDIAN_TOKENS: ${NETGUARDIAN_TOKENS:?Set NETGUARDIAN_TOKENS}
+  NETGUARDIAN_ORIGINS: ${NETGUARDIAN_ORIGINS:-{}}
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: netguardian
+      POSTGRES_DB: netguardian
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U netguardian -d netguardian']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks: [data]
+  migrate:
+    build: .
+    command: [/app/.venv/bin/alembic, upgrade, head]
+    environment: *control-environment
+    depends_on:
+      db: {condition: service_healthy}
+    networks: [data]
+  api:
+    build: .
+    environment: *control-environment
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    ports: ['127.0.0.1:8000:8000']
+    healthcheck:
+      test: [CMD, /app/.venv/bin/python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready', timeout=2)"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks: [data, frontend]
+    restart: unless-stopped
+  worker:
+    build: .
+    command: [/app/.venv/bin/python, -m, service.worker]
+    environment:
+      <<: *control-environment
+      NETGUARDIAN_VANTAGE_ID: ${NETGUARDIAN_VANTAGE_ID:?Set a stable worker location UUID}
+    depends_on:
+      api: {condition: service_healthy}
+    networks: [data, probes]
+    restart: unless-stopped
+  web:
+    build: ./web
+    environment:
+      NETGUARDIAN_API_URL: http://api:8000
+    ports: ['127.0.0.1:3000:3000']
+    depends_on:
+      api: {condition: service_healthy}
+    networks: [frontend]
+    restart: unless-stopped
+networks:
+  data: {internal: true}
+  frontend: {}
+  probes: {}
+volumes:
+  postgres-data: {}
