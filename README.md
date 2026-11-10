@@ -1,29 +1,35 @@
 # NetGuardian V2
 
-Network observability and diagnostics with controlled server probes and an optional
-outbound-only Windows agent (Linux delivery is deferred). The current local development build includes a
-Next.js interface, FastAPI control API, SQLAlchemy persistence and a separate worker.
-It is **not a production-ready release**. See [delivery status](docs/product/DELIVERY_STATUS.md)
-for implementation and verification gaps. No sample measurements are inserted into the product.
+**Network diagnostics and monitoring for approved targets.** Run a probe, compare
+results from two network locations, and review the evidence behind an incident.
 
-## What works in the current source
+[Get started](#local-development-setup) · [Windows launcher](#windows-local-launcher) · [System design](docs/architecture/SYSTEM_DESIGN.md) · [Delivery status](docs/product/DELIVERY_STATUS.md)
 
-- Approved-target DNS, TCP, TLS and HTTP HEAD jobs, with separate timing fields.
-- TLS protocol/cipher, certificate validity and leaf SHA-256 evidence.
-- Opt-in bounded ICMP/traceroute adapters for Windows and Linux.
-- Persistent cloud/agent schedules, pause/resume, collection freshness and incident history.
-- Agent enrollment/revocation, independent local target policy and OS credential storage.
-- Atomic cloud/local diagnostic-pair submission and conservative recorded-result comparison.
-- Redacted, checksummed incident reports and optional evidence-validated Ollama investigations.
-- Saved investigation history and workspace-scoped operator audit events.
+## What you can do
 
-Windows local checks include loopback TLS/IPv6 and system probes, OS-keyring
-rotation recovery, PostgreSQL migrations/concurrency/backup restore, and real CPU
-Ollama investigation. Browser checks cover populated monitor/report views,
-retained-history pagination, saved AI findings and checksum-valid report download.
-These are bounded local scenarios, not production/load or cross-machine validation.
-Docker and Linux runtime verification remain deferred. See the concise
-[Windows delivery record](docs/product/WINDOWS_DELIVERY.md) for evidence and gaps.
+- **Diagnose connectivity** with DNS, TCP, TLS and HTTP HEAD probes. View individual
+  timing measurements and TLS certificate details. Enable bounded ICMP and
+  traceroute checks when needed.
+- **Monitor over time** with scheduled checks, collection freshness, and incident
+  and recovery history.
+- **Compare network locations** by pairing a server-side check with a check from an
+  outbound-only Windows Agent that enforces its own target policy.
+- **Review incident evidence** in redacted reports with checksums. Optional Ollama
+  investigations cite recorded evidence and can be reopened alongside the report.
+
+## How it fits together
+
+| Component | Role |
+| --- | --- |
+| [Next.js dashboard](web/) | Submit diagnostics and review monitoring, comparisons and reports. |
+| [FastAPI service and worker](service/) | Authorize requests, schedule and run server-side jobs, and store results with SQLAlchemy. |
+| [Probe engine](probe_core/) | Validate targets and collect protocol-specific measurements. |
+| [Windows Agent](agent/) | Run approved checks from a local network location and return results over an outbound connection. |
+
+V2 is currently scoped to local Windows evaluation. See the
+[Windows delivery record](docs/product/WINDOWS_DELIVERY.md) for verified scenarios
+and the [delivery checklist](docs/product/DELIVERY_STATUS.md) for remaining
+production and Linux deployment work.
 
 ## Local development setup
 
@@ -265,7 +271,7 @@ separate: TLS uses loopback fixtures; process tests launch fixed local Python fi
 Windows system-tool tests require `NETGUARDIAN_TEST_SYSTEM_PROBES=true`.
 PostgreSQL tests require a disposable `netguardian_test` database and
 `NETGUARDIAN_TEST_POSTGRES_URL`; absent configuration produces skips, not verification.
-CI definitions cover Windows/Linux and PostgreSQL but have not been run remotely here.
+GitHub Actions runs Python checks on Windows and Ubuntu, Web checks on Ubuntu, and PostgreSQL integration tests. See the [CI workflow](.github/workflows/ci.yml) for the test matrix.
 
 Back up existing databases before migration. Do not blindly stamp schemas from old
 unversioned development snapshots. Docker Compose configuration is provided but remains
@@ -287,7 +293,7 @@ be relabeled as ICMP or component timings.
 - [Current delivery gates](docs/product/DELIVERY_STATUS.md)
 - [Browser QA scope](docs/product/BROWSER_QA.md)
 
-The repository still needs an owner-selected license and asset redistribution review.
+See [NOTICE.md](NOTICE.md) for licensing scope and the legacy asset redistribution review.
 
 The Web API proxy bounds POST/PATCH bodies to 8 KiB of raw UTF-8 bytes and a
 10-second read deadline, including chunked requests. Encoded/compressed bodies
@@ -415,7 +421,7 @@ Project code and documentation use the [MIT License](LICENSE). See [NOTICE.md](N
 for third-party components and the unresolved legacy portrait asset scope.
 
 Current delivery target: **Windows local use**. Linux runtime support and release
-validation are deferred; cross-platform source and CI configuration remain preparatory.
+validation for deployment are deferred. CI covers selected Linux test scenarios.
 
 
 ### Missing cloud-worker results
