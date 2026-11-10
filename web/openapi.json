@@ -1,0 +1,2034 @@
+{
+  "components": {
+    "schemas": {
+      "CompareRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "left_job_id": {
+            "format": "uuid",
+            "title": "Left Job Id",
+            "type": "string"
+          },
+          "right_job_id": {
+            "format": "uuid",
+            "title": "Right Job Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "left_job_id",
+          "right_job_id"
+        ],
+        "title": "CompareRequest",
+        "type": "object"
+      },
+      "CreateJob": {
+        "additionalProperties": false,
+        "properties": {
+          "agent_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agent Id"
+          },
+          "kind": {
+            "enum": [
+              "dns",
+              "tcp",
+              "tls",
+              "http",
+              "icmp",
+              "traceroute"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "target": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Target",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "target"
+        ],
+        "title": "CreateJob",
+        "type": "object"
+      },
+      "CreateMonitor": {
+        "additionalProperties": false,
+        "properties": {
+          "agent_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agent Id"
+          },
+          "interval_seconds": {
+            "default": 60,
+            "maximum": 86400.0,
+            "minimum": 60.0,
+            "title": "Interval Seconds",
+            "type": "integer"
+          },
+          "kind": {
+            "enum": [
+              "dns",
+              "tcp",
+              "tls",
+              "http",
+              "icmp",
+              "traceroute"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "open_after": {
+            "default": 3,
+            "maximum": 20.0,
+            "minimum": 1.0,
+            "title": "Open After",
+            "type": "integer"
+          },
+          "recover_after": {
+            "default": 2,
+            "maximum": 20.0,
+            "minimum": 1.0,
+            "title": "Recover After",
+            "type": "integer"
+          },
+          "target": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Target",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "target",
+          "name"
+        ],
+        "title": "CreateMonitor",
+        "type": "object"
+      },
+      "CreatePair": {
+        "additionalProperties": false,
+        "properties": {
+          "agent_id": {
+            "format": "uuid",
+            "title": "Agent Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "dns",
+              "tcp",
+              "tls",
+              "http",
+              "icmp",
+              "traceroute"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "target": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Target",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "target",
+          "agent_id"
+        ],
+        "title": "CreatePair",
+        "type": "object"
+      },
+      "DnsAnswer": {
+        "additionalProperties": false,
+        "properties": {
+          "addresses": {
+            "items": {
+              "format": "ipvanyaddress",
+              "type": "string"
+            },
+            "maxItems": 16,
+            "title": "Addresses",
+            "type": "array"
+          },
+          "canonical_name": {
+            "maxLength": 255,
+            "title": "Canonical Name",
+            "type": "string"
+          },
+          "record_type": {
+            "enum": [
+              "A",
+              "AAAA"
+            ],
+            "title": "Record Type",
+            "type": "string"
+          },
+          "resolver": {
+            "anyOf": [
+              {
+                "maxLength": 255,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolver"
+          },
+          "resolver_port": {
+            "anyOf": [
+              {
+                "maximum": 65535.0,
+                "minimum": 1.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resolver Port"
+          },
+          "ttl_seconds": {
+            "maximum": 4294967295.0,
+            "minimum": 0.0,
+            "title": "Ttl Seconds",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "record_type",
+          "addresses",
+          "ttl_seconds",
+          "canonical_name"
+        ],
+        "title": "DnsAnswer",
+        "type": "object"
+      },
+      "DnsDetails": {
+        "additionalProperties": false,
+        "properties": {
+          "answers": {
+            "items": {
+              "$ref": "#/components/schemas/DnsAnswer"
+            },
+            "maxItems": 2,
+            "title": "Answers",
+            "type": "array"
+          },
+          "used_dns": {
+            "title": "Used Dns",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "used_dns",
+          "answers"
+        ],
+        "title": "DnsDetails",
+        "type": "object"
+      },
+      "EnrollmentRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "EnrollmentRequest",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "InvestigateRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "report_id": {
+            "format": "uuid",
+            "title": "Report Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "report_id"
+        ],
+        "title": "InvestigateRequest",
+        "type": "object"
+      },
+      "JobAccepted": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "state": {
+            "const": "queued",
+            "title": "State",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "state"
+        ],
+        "title": "JobAccepted",
+        "type": "object"
+      },
+      "JobDetail": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Measurement"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ],
+            "title": "State",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "state",
+          "result"
+        ],
+        "title": "JobDetail",
+        "type": "object"
+      },
+      "JobSummary": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "dns",
+              "tcp",
+              "tls",
+              "http",
+              "icmp",
+              "traceroute"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "target",
+          "state",
+          "created_at"
+        ],
+        "title": "JobSummary",
+        "type": "object"
+      },
+      "Measurement": {
+        "additionalProperties": false,
+        "properties": {
+          "attempt": {
+            "minimum": 1.0,
+            "title": "Attempt",
+            "type": "integer"
+          },
+          "configuration_hash": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Configuration Hash",
+            "type": "string"
+          },
+          "connected_ip": {
+            "anyOf": [
+              {
+                "format": "ipvanyaddress",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Connected Ip"
+          },
+          "dns": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DnsDetails"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProbeError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "http_status": {
+            "anyOf": [
+              {
+                "maximum": 599.0,
+                "minimum": 100.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Http Status"
+          },
+          "job_id": {
+            "format": "uuid",
+            "title": "Job Id",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "dns",
+              "tcp",
+              "tls",
+              "http",
+              "icmp",
+              "traceroute"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "observed_at": {
+            "format": "date-time",
+            "title": "Observed At",
+            "type": "string"
+          },
+          "policy_version": {
+            "minLength": 1,
+            "title": "Policy Version",
+            "type": "string"
+          },
+          "probe_version": {
+            "minLength": 1,
+            "title": "Probe Version",
+            "type": "string"
+          },
+          "received_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Received At"
+          },
+          "resolved_ips": {
+            "default": [],
+            "items": {
+              "format": "ipvanyaddress",
+              "type": "string"
+            },
+            "title": "Resolved Ips",
+            "type": "array"
+          },
+          "schema_version": {
+            "const": "1",
+            "default": "1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "success",
+              "error",
+              "timeout",
+              "denied",
+              "unsupported",
+              "cancelled"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "system_probe": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SystemProbeDetails"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "target": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Target",
+            "type": "string"
+          },
+          "timings": {
+            "$ref": "#/components/schemas/Timings"
+          },
+          "tls": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TlsDetails"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "vantage_id": {
+            "format": "uuid",
+            "title": "Vantage Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "job_id",
+          "attempt",
+          "kind",
+          "vantage_id",
+          "target",
+          "configuration_hash",
+          "observed_at",
+          "probe_version",
+          "policy_version",
+          "status"
+        ],
+        "title": "Measurement",
+        "type": "object"
+      },
+      "ProbeError": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "enum": [
+              "policy_denied",
+              "timeout",
+              "resolution_failed",
+              "transport_error",
+              "tls_verification_failed",
+              "unsupported",
+              "cancelled"
+            ],
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          },
+          "tls_verify_code": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tls Verify Code"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ProbeError",
+        "type": "object"
+      },
+      "RedeemRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "token": {
+            "maxLength": 128,
+            "minLength": 32,
+            "title": "Token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "title": "RedeemRequest",
+        "type": "object"
+      },
+      "ReportRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "incident_id": {
+            "format": "uuid",
+            "title": "Incident Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "incident_id"
+        ],
+        "title": "ReportRequest",
+        "type": "object"
+      },
+      "ResultUpload": {
+        "additionalProperties": false,
+        "properties": {
+          "lease_token": {
+            "maxLength": 36,
+            "minLength": 36,
+            "title": "Lease Token",
+            "type": "string"
+          },
+          "measurement": {
+            "$ref": "#/components/schemas/Measurement"
+          }
+        },
+        "required": [
+          "lease_token",
+          "measurement"
+        ],
+        "title": "ResultUpload",
+        "type": "object"
+      },
+      "RotateRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "credential": {
+            "maxLength": 128,
+            "minLength": 43,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "title": "Credential",
+            "type": "string"
+          }
+        },
+        "required": [
+          "credential"
+        ],
+        "title": "RotateRequest",
+        "type": "object"
+      },
+      "RouteHop": {
+        "additionalProperties": false,
+        "properties": {
+          "addresses": {
+            "items": {
+              "format": "ipvanyaddress",
+              "type": "string"
+            },
+            "maxItems": 3,
+            "title": "Addresses",
+            "type": "array"
+          },
+          "hop": {
+            "maximum": 15.0,
+            "minimum": 1.0,
+            "title": "Hop",
+            "type": "integer"
+          },
+          "missing_replies": {
+            "maximum": 3.0,
+            "minimum": 0.0,
+            "title": "Missing Replies",
+            "type": "integer"
+          },
+          "rtt_samples": {
+            "items": {
+              "$ref": "#/components/schemas/RttSample"
+            },
+            "maxItems": 3,
+            "title": "Rtt Samples",
+            "type": "array"
+          }
+        },
+        "required": [
+          "hop",
+          "addresses",
+          "rtt_samples",
+          "missing_replies"
+        ],
+        "title": "RouteHop",
+        "type": "object"
+      },
+      "RttSample": {
+        "additionalProperties": false,
+        "properties": {
+          "milliseconds": {
+            "minimum": 0.0,
+            "title": "Milliseconds",
+            "type": "number"
+          },
+          "upper_bound": {
+            "default": false,
+            "title": "Upper Bound",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "milliseconds"
+        ],
+        "title": "RttSample",
+        "type": "object"
+      },
+      "SystemProbeDetails": {
+        "additionalProperties": false,
+        "properties": {
+          "destination_reached": {
+            "title": "Destination Reached",
+            "type": "boolean"
+          },
+          "hops": {
+            "items": {
+              "$ref": "#/components/schemas/RouteHop"
+            },
+            "maxItems": 15,
+            "title": "Hops",
+            "type": "array"
+          },
+          "method": {
+            "enum": [
+              "icmp_echo",
+              "icmp_traceroute"
+            ],
+            "title": "Method",
+            "type": "string"
+          },
+          "received": {
+            "anyOf": [
+              {
+                "maximum": 45.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Received"
+          },
+          "rtt_samples": {
+            "items": {
+              "$ref": "#/components/schemas/RttSample"
+            },
+            "maxItems": 3,
+            "title": "Rtt Samples",
+            "type": "array"
+          },
+          "sent": {
+            "anyOf": [
+              {
+                "maximum": 45.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sent"
+          }
+        },
+        "required": [
+          "method",
+          "rtt_samples",
+          "hops",
+          "destination_reached"
+        ],
+        "title": "SystemProbeDetails",
+        "type": "object"
+      },
+      "Timings": {
+        "additionalProperties": false,
+        "properties": {
+          "dns_lookup_ms": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dns Lookup Ms"
+          },
+          "http_total_ms": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Http Total Ms"
+          },
+          "http_ttfb_ms": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Http Ttfb Ms"
+          },
+          "icmp_rtt_ms": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Icmp Rtt Ms"
+          },
+          "tcp_connect_ms": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tcp Connect Ms"
+          },
+          "tls_handshake_ms": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tls Handshake Ms"
+          }
+        },
+        "title": "Timings",
+        "type": "object"
+      },
+      "TlsDetails": {
+        "additionalProperties": false,
+        "properties": {
+          "cipher": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Cipher",
+            "type": "string"
+          },
+          "cipher_bits": {
+            "maximum": 65536.0,
+            "minimum": 0.0,
+            "title": "Cipher Bits",
+            "type": "integer"
+          },
+          "hostname_verified": {
+            "const": true,
+            "default": true,
+            "title": "Hostname Verified",
+            "type": "boolean"
+          },
+          "leaf_sha256": {
+            "pattern": "^[a-f0-9]{64}$",
+            "title": "Leaf Sha256",
+            "type": "string"
+          },
+          "not_after": {
+            "format": "date-time",
+            "title": "Not After",
+            "type": "string"
+          },
+          "not_before": {
+            "format": "date-time",
+            "title": "Not Before",
+            "type": "string"
+          },
+          "protocol": {
+            "maxLength": 32,
+            "minLength": 1,
+            "title": "Protocol",
+            "type": "string"
+          }
+        },
+        "required": [
+          "protocol",
+          "cipher",
+          "cipher_bits",
+          "leaf_sha256",
+          "not_before",
+          "not_after"
+        ],
+        "title": "TlsDetails",
+        "type": "object"
+      },
+      "UpdateMonitor": {
+        "additionalProperties": false,
+        "properties": {
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "enabled"
+        ],
+        "title": "UpdateMonitor",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "title": "NetGuardian API",
+    "version": "0.2.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/agent/enroll": {
+      "post": {
+        "operationId": "redeem_api_agent_enroll_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RedeemRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Redeem"
+      }
+    },
+    "/api/agent/poll": {
+      "post": {
+        "operationId": "poll_api_agent_poll_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Poll"
+      }
+    },
+    "/api/agent/results": {
+      "post": {
+        "operationId": "upload_api_agent_results_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResultUpload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Upload"
+      }
+    },
+    "/api/agent/rotate": {
+      "post": {
+        "operationId": "rotate_api_agent_rotate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RotateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Rotate"
+      }
+    },
+    "/api/agents": {
+      "get": {
+        "operationId": "agents_api_agents_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Agents"
+      }
+    },
+    "/api/agents/enrollment": {
+      "post": {
+        "operationId": "issue_api_agents_enrollment_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnrollmentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Issue"
+      }
+    },
+    "/api/agents/{agent_id}": {
+      "delete": {
+        "operationId": "revoke_api_agents__agent_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "agent_id",
+            "required": true,
+            "schema": {
+              "title": "Agent Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Revoke"
+      }
+    },
+    "/api/audit-events": {
+      "get": {
+        "operationId": "history_api_audit_events_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "History"
+      }
+    },
+    "/api/comparisons": {
+      "post": {
+        "operationId": "comparison_api_comparisons_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompareRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Comparison"
+      }
+    },
+    "/api/diagnostic-pairs": {
+      "get": {
+        "operationId": "pair_history_api_diagnostic_pairs_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Pair History"
+      },
+      "post": {
+        "operationId": "submit_pair_api_diagnostic_pairs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePair"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Submit Pair"
+      }
+    },
+    "/api/incidents": {
+      "get": {
+        "operationId": "incidents_api_incidents_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Incidents"
+      }
+    },
+    "/api/incidents/{incident_id}/evidence": {
+      "get": {
+        "operationId": "incident_history_api_incidents__incident_id__evidence_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "incident_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Incident Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "After",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Incident History"
+      }
+    },
+    "/api/investigations": {
+      "get": {
+        "operationId": "history_api_investigations_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "History"
+      },
+      "post": {
+        "operationId": "investigate_api_investigations_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvestigateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Investigate"
+      }
+    },
+    "/api/investigations/{investigation_id}": {
+      "get": {
+        "operationId": "detail_api_investigations__investigation_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "investigation_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Investigation Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Detail"
+      }
+    },
+    "/api/jobs": {
+      "get": {
+        "operationId": "history_api_jobs_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/JobSummary"
+                  },
+                  "title": "Response History Api Jobs Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "History"
+      },
+      "post": {
+        "operationId": "submit_api_jobs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateJob"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobAccepted"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Submit"
+      }
+    },
+    "/api/jobs/{job_id}": {
+      "get": {
+        "operationId": "detail_api_jobs__job_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "title": "Job Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Detail"
+      }
+    },
+    "/api/monitors": {
+      "get": {
+        "operationId": "monitors_api_monitors_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Monitors"
+      },
+      "post": {
+        "operationId": "add_monitor_api_monitors_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMonitor"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Add Monitor"
+      }
+    },
+    "/api/monitors/{monitor_id}": {
+      "delete": {
+        "operationId": "disable_monitor_api_monitors__monitor_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "monitor_id",
+            "required": true,
+            "schema": {
+              "title": "Monitor Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Disable Monitor"
+      },
+      "patch": {
+        "operationId": "update_monitor_api_monitors__monitor_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "monitor_id",
+            "required": true,
+            "schema": {
+              "title": "Monitor Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMonitor"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update Monitor"
+      }
+    },
+    "/api/monitors/{monitor_id}/runs": {
+      "get": {
+        "operationId": "monitor_history_api_monitors__monitor_id__runs_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "monitor_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Monitor Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Monitor History"
+      }
+    },
+    "/api/reports": {
+      "get": {
+        "operationId": "reports_api_reports_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Reports"
+      },
+      "post": {
+        "operationId": "create_report_api_reports_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Report"
+      }
+    },
+    "/api/reports/{report_id}": {
+      "get": {
+        "operationId": "report_api_reports__report_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "report_id",
+            "required": true,
+            "schema": {
+              "title": "Report Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Report"
+      }
+    },
+    "/api/targets": {
+      "get": {
+        "operationId": "targets_api_targets_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Targets"
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health"
+      }
+    },
+    "/ready": {
+      "get": {
+        "operationId": "readiness_ready_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Readiness"
+      }
+    }
+  }
+}

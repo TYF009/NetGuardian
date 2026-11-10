@@ -1,0 +1,29 @@
+{
+  "name": "netguardian-web",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.mjs",
+    "generate:api": "openapi-typescript openapi.json -o lib/api-schema.d.ts"
+  },
+  "dependencies": {
+    "next": "^16.0.0",
+    "openapi-fetch": "0.17.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "openapi-typescript": "7.13.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

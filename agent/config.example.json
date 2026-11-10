@@ -1,0 +1,6 @@
+{
+  "api_url": "https://control.example.com",
+  "agent_id": null,
+  "origins": [],
+  "private_cidrs": []
+}

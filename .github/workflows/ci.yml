@@ -1,0 +1,67 @@
+name: Baseline checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  checks:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install uv==0.13.7
+      - run: uv sync --locked
+      - run: uv run --locked python -m scripts.export_openapi --check
+      - run: uv run --locked ruff check .
+      - run: uv run --locked ruff format --check .
+      - run: uv run --locked python -m compileall -q app.py diagnostics.py probe_core service agent migrations tests
+      - run: uv run --locked pytest -q
+      - run: uv run --locked pytest integration/test_tls.py integration/test_process_cleanup.py integration/test_agent_lock.py integration/test_agent_workflow.py integration/test_admission_runtime.py integration/test_windows_job.py integration/test_dns_runtime.py -q
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.25.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm generate:api
+      - run: git diff --exit-code -- lib/api-schema.d.ts
+      - run: pnpm typecheck
+      - run: pnpm build
+
+  postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: netguardian
+          POSTGRES_PASSWORD: integration-only
+          POSTGRES_DB: netguardian_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U netguardian -d netguardian_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      NETGUARDIAN_TEST_POSTGRES_URL: postgresql+psycopg://netguardian:integration-only@127.0.0.1:5432/netguardian_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install uv==0.13.7
+      - run: uv sync --locked
+      - run: uv run --locked pytest integration -q
