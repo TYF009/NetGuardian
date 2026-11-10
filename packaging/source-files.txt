@@ -18,6 +18,7 @@ compose.yaml
 diagnostics.py
 docs/architecture/DATA_MODEL.md
 docs/architecture/SYSTEM_DESIGN.md
+docs/operations/LOCAL_DEVELOPMENT.md
 docs/operations/RUNBOOK.md
 docs/product/BROWSER_QA.md
 docs/product/DELIVERY_STATUS.md
