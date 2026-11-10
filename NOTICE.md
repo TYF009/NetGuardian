@@ -4,7 +4,8 @@ NetGuardian project code and documentation are provided under the MIT license in
 LICENSE, as selected by the repository owner. Third-party dependencies and downloaded
 models retain their own licenses; they are not relicensed by this repository.
 
-The legacy portrait asset `Felix.jpg` has unresolved redistribution provenance.
-It is excluded from the project's MIT licensing declaration pending owner
-confirmation and excluded from the API/worker Docker build context. Keeping the
-original file locally does not establish permission to redistribute the portrait.
+The optional legacy Streamlit portrait, `Felix.jpg`, has unresolved
+redistribution provenance and is outside the project's MIT licensing scope.
+It is excluded from the current source tree, Docker build context and source
+bundle. Older Git commits may still contain the original file. A local copy
+remains optional because the Streamlit sidebar has a text fallback.

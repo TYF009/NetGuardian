@@ -6,6 +6,7 @@ Dockerfile
 LICENSE
 NOTICE.md
 README.md
+README.zh-CN.md
 agent/__init__.py
 agent/client.py
 agent/config.example.json
@@ -18,6 +19,7 @@ compose.yaml
 diagnostics.py
 docs/architecture/DATA_MODEL.md
 docs/architecture/SYSTEM_DESIGN.md
+docs/operations/LOCAL_DEVELOPMENT.md
 docs/operations/RUNBOOK.md
 docs/product/BROWSER_QA.md
 docs/product/DELIVERY_STATUS.md

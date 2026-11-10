@@ -9,7 +9,7 @@ The latest consolidated local regression is recorded in VERIFICATION.md.
 | Area | Current evidence | Remaining release gate |
 |---|---|---|
 | Core policy | Negative-input tests; pinned-transport doubles; Windows IPv4/IPv6 loopback real TLS trust/hostname/fingerprint tests | Remaining protocol fields, Linux TLS/IPv6 platform checks |
-| API and jobs | Auth, persistence and tenant tests; concurrent workspace initialization tested on SQLite; Windows PostgreSQL 17.11 migration/concurrency/tenant and real HTTPS workflow tests passed; remote CI not run | Remaining audit coverage, aggregate multi-replica admission controls and broader concurrent-load verification (controlled PostgreSQL retention/scheduler overlap passed) |
+| API and jobs | Auth, persistence and tenant tests; concurrent workspace initialization tested on SQLite; Windows PostgreSQL 17.11 migration/concurrency/tenant and real HTTPS workflow tests passed; Windows and Ubuntu CI passed | Remaining audit coverage, aggregate multi-replica admission controls and broader concurrent-load verification (controlled PostgreSQL retention/scheduler overlap passed) |
 | Monitoring | Schedule/threshold/recovery and authenticated pause/resume tests | Broader concurrent-load verification (controlled retention/scheduler overlap passed) and cross-machine agent schedule verification (real loopback HTTPS scheduling/incident recovery passed) |
 | Web | TypeScript/build; local browser login, navigation, empty states and disconnect (BROWSER_QA.md) | Broader responsive/accessibility QA beyond the tested 320/390 px and keyboard flows (creation, pair submission, Agent revocation, saved-pair comparison, freshness, pause/resume, history, report and disconnect inspected) |
 | Agent | Enrollment/replay/revoke and local policy tests; Windows real HTTPS enrollment-to-report loopback workflow with spool reload/duplicate replay passed | Linux OS-keyring checks (Windows write/read/cleanup passed), real process-crash and cross-machine recovery verification (Windows OS-keyring plus HTTPS lost-acknowledgement-state recovery and revocation passed), signed distribution |
@@ -17,11 +17,27 @@ The latest consolidated local regression is recorded in VERIFICATION.md.
 | Reports | Immutable snapshot/redaction/citation tests | Broader export-size/archival policy (retained history pagination and actual download checksum verified) |
 | Comparison | Conservative evidence comparison tests; real HTTPS cloud-worker/agent paired execution and comparison passed on Windows loopback | Cross-machine paired cloud/agent runtime and resolver cache comparability (endpoint/TTL recorded; atomic enqueue tested) |
 | AI investigation | Real Windows CPU Ollama/Qwen2.5 1.5B evidence validation and API persistence/isolation passed; failure fallback unit tests | Broader diagnosis-quality evaluation (persisted history/source-report browser QA passed) |
-| Operations | Compose and runbook written | Docker Compose and Linux/remote CI verification (portable Windows PostgreSQL startup and backup/restore content comparison passed) |
+| Operations | Compose and runbook written | Docker Compose startup and Linux deployment verification (portable Windows PostgreSQL startup and backup/restore content comparison passed) |
 | Open source release | Repository public | MIT selected; legacy portrait excluded pending redistribution-rights confirmation |
 
 Do not mark the product complete while required gates lack evidence. Do not infer Linux,
 PostgreSQL, deployment or performance results from Windows/SQLite tests.
+
+## Portfolio verification checkpoint (2026-11-10)
+
+- The [main baseline GitHub Actions run](https://github.com/TYF009/NetGuardian/actions/runs/42789779017)
+  passed on Windows and Ubuntu, including Web and disposable PostgreSQL jobs.
+- Local Windows verification for this branch passed 175 Python unit tests,
+  21 runtime integration cases and nine Web tests. Seven PostgreSQL cases and
+  one real Ollama case were skipped locally because those fixtures were absent.
+  Ruff lint and format, OpenAPI drift, TypeScript and the Next.js production
+  build passed. The Windows launcher reached readiness using a fresh temporary
+  SQLite database, a test token and an empty target allowlist.
+- Both Web container stages now use Node.js 24, matching the package engine and
+  CI major version. Docker was unavailable for a local image build. Clean Compose
+  startup, Linux deployment and cross-machine Agent operation remain open.
+- The optional legacy portrait has been removed from the current source tree
+  pending redistribution approval. See [NOTICE.md](../../NOTICE.md).
 
 ## Agent single-instance checkpoint
 
@@ -182,7 +198,7 @@ Web tests, three relevant backend tests, schema check and production build passe
 Compile-only checks reject arbitrary probe kinds and omitted required parameters.
 The generated contract exposed optional timing fields; missing values are skipped,
 not displayed as zero. Other page response types remain manual. Node.js 24 is now
-the documented/tested Web toolchain and CI version. Remote CI has not run.
+the documented/tested Web toolchain and CI version. See the portfolio checkpoint above for the current CI result.
 
 
 ## Agent delivery loop restart branches

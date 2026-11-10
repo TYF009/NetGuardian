@@ -45,3 +45,6 @@ out/
 *.pfx
 *.key
 !tests/fixtures/tls/server.key
+
+# Optional local Streamlit portrait with unresolved redistribution rights
+/Felix.jpg
