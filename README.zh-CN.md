@@ -3,7 +3,7 @@
 [![Baseline checks](https://github.com/TYF009/NetGuardian/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/TYF009/NetGuardian/actions/workflows/ci.yml) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 [English](README.md) · **简体中文**
-[演示快速开始](#演示快速开始) · [完整本地部署](#完整本地部署) · [文档导航](docs/README.md)
+[演示快速开始](#演示快速开始) · [首次诊断演练](#首次诊断演练) · [完整本地部署](#完整本地部署) · [文档导航](docs/README.md)
 
 NetGuardian 是我独立设计和开发的开源网络监控与证据化排障平台，面向酒店 IT 运维。平台由 FastAPI、Next.js、后台 Worker、SQLite/PostgreSQL 和 Windows Agent 组成。
 
@@ -11,21 +11,23 @@ NetGuardian 是我独立设计和开发的开源网络监控与证据化排障�
 - **作品集演示。** 使用虚构酒店数据，在本地前端运行，无需 Token。
 - **开源实现。** 认证工作区、任务调度、Agent 和证据处理使用 MIT 许可证。
 
+![模拟酒店看板，展示端点趋势和业务服务状态](docs/assets/screenshots/hotel-dashboard.jpg)
+
+*Aster Quay Hotel 是虚构酒店，看板数据为模拟数据。*
+
 ## 为什么开发这个项目
 
 支持酒店 LAN/WLAN、Windows 工作站、前台系统和 POS 连接时，我发现 DNS、TCP、TLS 和 HTTP 检查分散在不同工具里，往往需要人工重复执行，结果也难以统一归档和交接。我用 NetGuardian 将授权探测、定时观测、事件记录和证据报告串在一起。项目从 Streamlit 原型逐步演进为由 FastAPI 控制面、Next.js 工作区、持久化 Worker 和出站 Windows Agent 组成的平台。
 
 ## 运城恒泽大酒店 IT 运维应用
 
-NetGuardian 已获酒店批准并投入运维使用。我担任 IT Infrastructure & Network Engineer 期间负责 LAN/WLAN 维护、TCP/IP、DNS 和 DHCP 故障排查、Windows 技术支持、前台及 POS 连通性支持，以及 Python 自动化。部署范围、网络设计、运行记录和业务指标不公开。公开演示与真实环境隔离，使用虚构的 Aster Quay Hotel。
+NetGuardian 已获酒店批准并投入运维使用。我担任 IT Infrastructure & Network Engineer 期间负责 LAN/WLAN 维护、TCP/IP、DNS 和 DHCP 故障排查、Windows 技术支持、前台及 POS 连通性支持，以及 Python 自动化。生产网络数据、实际部署范围及酒店使用的具体模块不公开。设备数量、可用率、平均恢复时间（MTTR）和效率提升数据均未公开。CI 和集成测试不验证酒店生产环境的性能。公开演示与真实环境隔离，使用虚构的 Aster Quay Hotel。
 
 ## 截图
 
-以下三张截图来自实际运行的演示页面，数据均为模拟。
+首页和本节的截图来自实际运行的演示页面，数据均为模拟。
 
-| 基础设施总览与服务状态 | 配置定义的逻辑拓扑与事件 |
-| --- | --- |
-| ![模拟酒店趋势与服务健康看板](docs/assets/screenshots/hotel-dashboard.jpg) | ![模拟拓扑及选中节点和事件](docs/assets/screenshots/hotel-topology.jpg) |
+![模拟拓扑，展示选中的 POS 节点和事件时间线](docs/assets/screenshots/hotel-topology.jpg)
 
 ![模拟 POS HTTP 503 的 DNS、TCP、TLS 和 HTTP 分层诊断](docs/assets/screenshots/hotel-diagnostics.jpg)
 
@@ -94,20 +96,57 @@ pnpm --dir web start
 
 ## 完整本地部署
 
-需要 Windows、Python 3.11、uv 0.13.7、Node.js 24 与 pnpm 11.25.0。按前述命令构建前端，再用 Ctrl+C 停止演示进程，释放端口 3000。回到仓库根目录执行：
+需要 Windows、Python 3.11、uv 0.13.7、Node.js 24 与 pnpm 11.25.0。按前述命令构建前端，再用 Ctrl+C 停止演示进程，释放端口 3000。回到仓库根目录安装 Python 依赖并完成一次性初始化。把显示的本地管理员 Token 保存到密码管理器。探测位置 ID 文件保存在 Git 忽略的本地运行目录：
 
 ```powershell
 python -m pip install uv==0.13.7
 uv sync --locked
 $workspaceToken = (uv run --locked python -c "import secrets; print(secrets.token_urlsafe(32))").Trim()
+$workspaceToken
+New-Item -ItemType Directory -Path .netguardian-local -Force | Out-Null
+$vantageFile = '.netguardian-local/workspace-vantage-id.txt'
+if (-not (Test-Path -LiteralPath $vantageFile)) {
+    [guid]::NewGuid().ToString() | Set-Content -LiteralPath $vantageFile -Encoding ascii
+}
+```
+
+首次启动和以后每次打开新的 PowerShell 窗口时，加载同一个本地 Token 和已保存的 Worker 探测位置 ID。空白名单适合不发起探测的试运行。使用 `--migrate` 前请备份已有数据库：
+
+```powershell
+$workspaceToken = [pscredential]::new(
+    'local', (Read-Host 'Local workspace token' -AsSecureString)
+).GetNetworkCredential().Password
 $env:NETGUARDIAN_TOKENS = @{ $workspaceToken = 'local' } | ConvertTo-Json -Compress
 $env:NETGUARDIAN_ORIGINS = '{}'
-$env:NETGUARDIAN_VANTAGE_ID = [guid]::NewGuid().ToString()
-$workspaceToken
+$env:NETGUARDIAN_VANTAGE_ID = (Get-Content -LiteralPath '.netguardian-local/workspace-vantage-id.txt' -Raw).Trim()
 uv run --locked python -m scripts.run_windows --migrate
 ```
 
-打开[认证工作区](http://127.0.0.1:3000/workspace)并输入生成的本地 Token。空白名单会禁用目标探测。获授权后，在 `NETGUARDIAN_ORIGINS` 中配置工作区到精确目标来源的映射。保护 Token，保留观测时使用稳定的探测位置标识，迁移前备份已有数据库。启动器会执行 Alembic 迁移，并在回环地址启动 API、Worker 和 Web。[独立进程命令、数据库配置、Agent 注册及排障](docs/operations/LOCAL_DEVELOPMENT.md) · [运维手册](docs/operations/RUNBOOK.md)
+打开[认证工作区](http://127.0.0.1:3000/workspace)并输入生成的本地 Token。数据库结构已更新时，日常重启可省略 `--migrate`，继续使用已保存的 ID。该 ID 只标识此 Worker 的观测位置，不授予访问权限。生产位置 ID 应与演示及测试环境分开。启动器会执行 Alembic 迁移，并在回环地址启动 API、Worker 和 Web。[独立进程命令、数据库配置、Agent 注册及排障](docs/operations/LOCAL_DEVELOPMENT.md) · [运维手册](docs/operations/RUNBOOK.md)
+
+## 首次诊断演练
+
+### 公开演示
+
+1. 按[演示快速开始](#演示快速开始)安装并启动前端，打开虚构的 Aster Quay Hotel 看板，确认页面有 **DEMO / SIMULATED** 标识。
+2. 打开 **Services**，比较 POS 的探测结果、端点响应和采集新鲜度。模拟探测已完成，并记录到 HTTP 503。
+3. 打开 **Topology**，选中 **POS terminals**，沿 **DEMO-104 · Open** 进入事件，点击 **Inspect evidence**。
+4. 查看 DNS、TCP、TLS 和 HTTP 四层证据，展开 **Raw probe evidence (JSON)** 查看模拟记录。可能原因、下一步检查和已观测事实分别展示。
+
+### 认证工作区
+
+1. 按[完整本地部署](#完整本地部署)安装服务并生成本地管理员 Token。使用独立的本地或测试工作区，与生产数据隔离。
+2. 选择你拥有或明确获准监测、且云端 Worker 的地址策略允许访问的精确 HTTPS 来源。下面是占位值，运行前请替换。先停止启动器，在启动服务的 PowerShell 窗口设置白名单。数据库结构已更新时，无需迁移即可重启。
+
+   ```powershell
+   $approvedOrigin = 'https://authorized-host.example:443'
+   $env:NETGUARDIAN_ORIGINS = @{ local = @($approvedOrigin) } | ConvertTo-Json -Compress
+   uv run --locked python -m scripts.run_windows
+   ```
+
+3. 打开 `/workspace`，输入本地 Token 并点击 **Connect**。在 **Diagnostics** 选择授权目标、探测类型（例如 **HTTP**）和 **Cloud worker**，点击 **Run diagnostic**。在 **Diagnostic history** 等任务结束后，点击 **Inspect** 查看记录。如果没有返回测量结果，检查 Worker 和任务状态。探测已完成也可能收到 HTTP 错误响应。
+4. 在 **Monitors** 选择授权目标、探测类型和 **Cloud worker**，输入名称，设置至少 60 秒的间隔，再点击 **Create monitor**。有定时运行记录后，点击 **View history**。
+5. 达到事件阈值后，可在 **Incidents** 查看事件。界面使用默认阈值：连续三次失败开启事件，连续两次成功恢复事件。已有事件时可点击 **Create evidence report**，并在 **Reports** 查看快照。健康、新建或缺少观测的监控可能没有事件可生成报告。
 
 ## 测试与验证
 

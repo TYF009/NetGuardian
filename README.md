@@ -3,7 +3,7 @@
 [![Baseline checks](https://github.com/TYF009/NetGuardian/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/TYF009/NetGuardian/actions/workflows/ci.yml) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 **English** · [简体中文](README.zh-CN.md)
-[Demo quick start](#demo-quick-start) · [Full local deployment](#full-local-deployment) · [Documentation](docs/README.md)
+[Demo quick start](#demo-quick-start) · [First diagnostic](#first-diagnostic-walkthrough) · [Full local deployment](#full-local-deployment) · [Documentation](docs/README.md)
 
 NetGuardian is an open-source network monitoring and evidence-based troubleshooting platform developed to support hotel IT operations. I designed and built it independently using FastAPI, Next.js, a background worker, SQLite/PostgreSQL and a Windows Agent.
 
@@ -11,21 +11,23 @@ NetGuardian is an open-source network monitoring and evidence-based troubleshoot
 - **Portfolio demo:** A token-free walkthrough of a fictional property, served locally from the frontend.
 - **Open-source implementation:** The authenticated workspace, scheduler, Agent and evidence pipeline are available under the MIT license.
 
+![Simulated hotel dashboard with endpoint trends and service health](docs/assets/screenshots/hotel-dashboard.jpg)
+
+*Aster Quay Hotel is fictional. Dashboard data is simulated.*
+
 ## Why I Built This
 
 Supporting hotel LAN/WLAN, Windows workstations, front desk systems and POS connectivity exposed a recurring problem: DNS, TCP, TLS and HTTP checks were spread across tools, repeated manually, and difficult to hand off with consistent evidence. I built NetGuardian to bring authorized checks, scheduled observations, incident history and evidence reports into one workflow. It grew from a Streamlit prototype into a FastAPI control plane, a Next.js workspace, a durable worker and an outbound Windows Agent.
 
 ## Hengze Hotel IT Operations
 
-NetGuardian was approved for use and deployed in IT operations at Hengze Hotel, where I worked as an IT Infrastructure & Network Engineer. My responsibilities included LAN/WLAN support, TCP/IP, DNS and DHCP troubleshooting, Windows support, front desk and POS connectivity, and Python automation. The deployment scope, network design, operational records and outcomes remain private. The public demo is isolated and uses Aster Quay Hotel, a fictional property.
+NetGuardian has been approved for use and deployed in IT operations at Hengze Hotel, where I worked as an IT Infrastructure & Network Engineer. My responsibilities included LAN/WLAN support, TCP/IP, DNS and DHCP troubleshooting, Windows support, front desk and POS connectivity, and Python automation. Production network data, deployment scope and the modules used at the hotel are private. Device counts, availability, MTTR and efficiency gains are not published. CI and integration tests do not validate hotel production performance. The public demo is isolated and uses Aster Quay Hotel, a fictional property.
 
 ## Screenshots
 
-All three images are real browser captures of the simulated Aster Quay Hotel demo.
+The images here and in the opening section are real browser captures of the simulated Aster Quay Hotel demo.
 
-| Infrastructure overview and service health | Configured logical topology and incidents |
-| --- | --- |
-| ![Simulated hotel dashboard with trends and service health](docs/assets/screenshots/hotel-dashboard.jpg) | ![Simulated topology with a selected switch and incident timeline](docs/assets/screenshots/hotel-topology.jpg) |
+![Simulated topology with a selected POS node and incident timeline](docs/assets/screenshots/hotel-topology.jpg)
 
 ![Simulated POS HTTP 503 in the DNS, TCP, TLS and HTTP diagnostic view](docs/assets/screenshots/hotel-diagnostics.jpg)
 
@@ -94,20 +96,57 @@ Open [the local demo](http://127.0.0.1:3000/). `/demo` is an alias. The demo req
 
 ## Full Local Deployment
 
-Use Windows, Python 3.11, uv 0.13.7, Node.js 24 and pnpm 11.25.0. Install and build the Web app as above, then stop the demo process with Ctrl+C so the full launcher can use port 3000. Run from the repository root:
+Use Windows, Python 3.11, uv 0.13.7, Node.js 24 and pnpm 11.25.0. Install and build the Web app as above, then stop the demo process with Ctrl+C so the full launcher can use port 3000. From the repository root, install Python dependencies and run the one-time setup. Copy the displayed local administrator token to a password manager. The ID file is under the ignored local runtime directory:
 
 ```powershell
 python -m pip install uv==0.13.7
 uv sync --locked
 $workspaceToken = (uv run --locked python -c "import secrets; print(secrets.token_urlsafe(32))").Trim()
+$workspaceToken
+New-Item -ItemType Directory -Path .netguardian-local -Force | Out-Null
+$vantageFile = '.netguardian-local/workspace-vantage-id.txt'
+if (-not (Test-Path -LiteralPath $vantageFile)) {
+    [guid]::NewGuid().ToString() | Set-Content -LiteralPath $vantageFile -Encoding ascii
+}
+```
+
+On first startup and in each new PowerShell session, load the same local token and saved Worker vantage ID. Use an empty allowlist for a no-probe trial. Back up any existing database before using `--migrate`:
+
+```powershell
+$workspaceToken = [pscredential]::new(
+    'local', (Read-Host 'Local workspace token' -AsSecureString)
+).GetNetworkCredential().Password
 $env:NETGUARDIAN_TOKENS = @{ $workspaceToken = 'local' } | ConvertTo-Json -Compress
 $env:NETGUARDIAN_ORIGINS = '{}'
-$env:NETGUARDIAN_VANTAGE_ID = [guid]::NewGuid().ToString()
-$workspaceToken
+$env:NETGUARDIAN_VANTAGE_ID = (Get-Content -LiteralPath '.netguardian-local/workspace-vantage-id.txt' -Raw).Trim()
 uv run --locked python -m scripts.run_windows --migrate
 ```
 
-Open [the authenticated workspace](http://127.0.0.1:3000/workspace) and use the generated local token. Empty origins disable target probing. Set `NETGUARDIAN_ORIGINS` to a JSON mapping of workspace IDs to approved exact origins when ready; keep the token private and reuse a stable vantage ID for retained data. Back up any existing database before migration. The launcher applies Alembic migrations and starts API, worker and Web on loopback. [Separate service commands, database settings, Agent enrollment and troubleshooting](docs/operations/LOCAL_DEVELOPMENT.md) · [Operator runbook](docs/operations/RUNBOOK.md)
+Open [the authenticated workspace](http://127.0.0.1:3000/workspace) and use the generated local token. For routine restarts with an up-to-date schema, omit `--migrate` and keep the saved ID. The ID labels observations from this Worker location. It grants no access. Keep production location IDs out of demos and test environments. The launcher applies Alembic migrations and starts API, worker and Web on loopback. [Separate service commands, database settings, Agent enrollment and troubleshooting](docs/operations/LOCAL_DEVELOPMENT.md) · [Operator runbook](docs/operations/RUNBOOK.md)
+
+## First Diagnostic Walkthrough
+
+### Public Demo
+
+1. Install and start the frontend using [Demo Quick Start](#demo-quick-start). Open the Aster Quay Hotel dashboard and confirm the **DEMO / SIMULATED** banner.
+2. Open **Services** and compare the POS probe outcome, endpoint response and collection freshness. The simulated probe completed and recorded HTTP 503.
+3. Open **Topology**, select **POS terminals**, then follow **DEMO-104 · Open** to the incident. Choose **Inspect evidence**.
+4. Read the DNS, TCP, TLS and HTTP cards. Expand **Raw probe evidence (JSON)** to see the simulated record. Possible explanations and next checks are separate from observations.
+
+### Authenticated Workspace
+
+1. Use [Full Local Deployment](#full-local-deployment) to install the services and generate a local administrator token. Use a separate local or test workspace, away from production data.
+2. Choose an exact HTTPS origin that you own or have explicit permission to monitor and that the cloud Worker can reach under its address policy. The value below is a placeholder. Replace it before running the example. Stop the launcher, set the allowlist in its PowerShell session, then restart without migration if the schema is current.
+
+   ```powershell
+   $approvedOrigin = 'https://authorized-host.example:443'
+   $env:NETGUARDIAN_ORIGINS = @{ local = @($approvedOrigin) } | ConvertTo-Json -Compress
+   uv run --locked python -m scripts.run_windows
+   ```
+
+3. Open `/workspace`, enter the local token, and choose **Connect**. In **Diagnostics**, select the approved target, a probe such as **HTTP**, and **Cloud worker**. Click **Run diagnostic**. In **Diagnostic history**, wait for the job to finish and use **Inspect** to see its recorded result. If no measurement was returned, check the Worker and task state. An HTTP error response can still come from a completed probe.
+4. In **Monitors**, select the approved target, probe and **Cloud worker**, give the monitor a name and an interval of at least 60 seconds, then choose **Create monitor**. Open **View history** after scheduled runs have been recorded.
+5. Open **Incidents** if the monitor has enough qualifying observations. The UI uses the default thresholds of three consecutive failures to open an incident and two consecutive successes to recover it. If an incident exists, choose **Create evidence report** and find the saved snapshot in **Reports**. A healthy, new or missing-data monitor may have no report to create.
 
 ## Testing & Verification
 
