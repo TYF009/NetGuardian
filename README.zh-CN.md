@@ -122,7 +122,7 @@ $env:NETGUARDIAN_VANTAGE_ID = (Get-Content -LiteralPath '.netguardian-local/work
 uv run --locked python -m scripts.run_windows --migrate
 ```
 
-打开[认证工作区](http://127.0.0.1:3000/workspace)并输入生成的本地 Token。数据库结构已更新时，日常重启可省略 `--migrate`，继续使用已保存的 ID。该 ID 只标识此 Worker 的观测位置，不授予访问权限。生产位置 ID 应与演示及测试环境分开。启动器会执行 Alembic 迁移，并在回环地址启动 API、Worker 和 Web。[独立进程命令、数据库配置、Agent 注册及排障](docs/operations/LOCAL_DEVELOPMENT.md) · [运维手册](docs/operations/RUNBOOK.md)
+打开[认证工作区](http://127.0.0.1:3000/workspace)并输入生成的本地 Token。重启时继续使用已保存的 ID。该 ID 只标识此 Worker 的观测位置，不授予访问权限。生产位置 ID 应与演示及测试环境分开。指定 `--migrate` 时，启动器会先执行 Alembic 迁移，再启动服务。数据库结构已是最新版本时，日常重启可省略此选项。API、Worker 和 Web 均在回环地址启动。[独立进程命令、数据库配置、Agent 注册及排障](docs/operations/LOCAL_DEVELOPMENT.md) · [运维手册](docs/operations/RUNBOOK.md)
 
 ## 首次诊断演练
 

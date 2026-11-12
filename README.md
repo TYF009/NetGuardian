@@ -122,7 +122,7 @@ $env:NETGUARDIAN_VANTAGE_ID = (Get-Content -LiteralPath '.netguardian-local/work
 uv run --locked python -m scripts.run_windows --migrate
 ```
 
-Open [the authenticated workspace](http://127.0.0.1:3000/workspace) and use the generated local token. For routine restarts with an up-to-date schema, omit `--migrate` and keep the saved ID. The ID labels observations from this Worker location. It grants no access. Keep production location IDs out of demos and test environments. The launcher applies Alembic migrations and starts API, worker and Web on loopback. [Separate service commands, database settings, Agent enrollment and troubleshooting](docs/operations/LOCAL_DEVELOPMENT.md) · [Operator runbook](docs/operations/RUNBOOK.md)
+Open [the authenticated workspace](http://127.0.0.1:3000/workspace) and use the generated local token. Keep the saved ID across restarts. The ID labels observations from this Worker location. It grants no access. Keep production location IDs out of demos and test environments. When started with `--migrate`, the launcher applies Alembic migrations before starting the services. Routine restarts can omit this flag when the database schema is current. The launcher starts the API, Worker and Web on loopback. [Separate service commands, database settings, Agent enrollment and troubleshooting](docs/operations/LOCAL_DEVELOPMENT.md) · [Operator runbook](docs/operations/RUNBOOK.md)
 
 ## First Diagnostic Walkthrough
 
