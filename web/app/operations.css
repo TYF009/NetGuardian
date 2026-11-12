@@ -1,0 +1,134 @@
+/* Shared surface, text and status tokens for both application modes. */
+:root {
+  color-scheme: light;
+  --canvas: #eef3f8;
+  --surface: #fff;
+  --subtle: #f6f8fc;
+  --ink: #172841;
+  --muted: #50647e;
+  --line: #d4deeb;
+  --accent: #176765;
+  --chart: #25847f;
+  --good-bg: #e3f5ee;
+  --good-ink: #1c644d;
+  --bad-bg: #fbe8e7;
+  --bad-ink: #8a322d;
+  --warn-bg: #ffefcd;
+  --warn-ink: #6b450c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --canvas: #0d1726; --surface: #142235; --subtle: #192b41; --ink: #edf4ff;
+    --muted: #b0c0d6; --line: #344762; --accent: #72dbce; --chart: #58c5b6;
+    --good-bg: #173a34; --good-ink: #9ce6cc; --bad-bg: #48292f; --bad-ink: #ffc0bd;
+    --warn-bg: #47351f; --warn-ink: #ffdc99;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #0d1726; --surface: #142235; --subtle: #192b41; --ink: #edf4ff;
+  --muted: #b0c0d6; --line: #344762; --accent: #72dbce; --chart: #58c5b6;
+  --good-bg: #173a34; --good-ink: #9ce6cc; --bad-bg: #48292f; --bad-ink: #ffc0bd;
+  --warn-bg: #47351f; --warn-ink: #ffdc99;
+}
+
+body {background: var(--canvas); color: var(--ink); font-family: Inter, "Segoe UI", Arial, sans-serif}
+a {color: var(--accent); text-underline-offset: 3px}
+a:focus-visible, summary:focus-visible, button:focus-visible, input:focus, select:focus {
+  outline: 2px solid var(--accent); outline-offset: 3px
+}
+header, th, td, .record {border-color: var(--line)}
+button, input, select, .panel, .stats section {background: var(--surface); color: var(--ink); border-color: var(--line)}
+.primary {background: #146660; color: #fff; border-color: #146660}
+th, .badge {background: var(--subtle); color: var(--ink)}
+.hint, .empty, footer, .stats span, .stats small, .toolbar, .record p,
+.login p, .timings span, header .eyebrow, .ops-muted {color: var(--muted)}
+.error {background: var(--bad-bg); color: var(--bad-ink)}
+svg text {fill: currentColor}
+.ops-theme {align-self: center; color: var(--muted)}
+.ops-theme select {min-width: 0; padding: 5px 8px}
+.ops-shell aside {background: #101f34; overflow: auto}
+.ops-shell aside a {color: #c8daed}
+.ops-shell aside .eyebrow {color: #a0b5ce}
+.ops-shell nav a {display: block; padding: 9px 12px; margin: 3px 0; border-radius: 6px; text-decoration: none}
+.ops-shell nav a.active, .ops-shell nav a:hover {background: #243b55; color: #e9fffc}
+.ops-shell aside a:focus-visible {outline-color: #83decb}
+.ops-main {padding-top: 24px}
+.ops-main header h1 {font-size: clamp(25px, 4vw, 38px)}
+.ops-main header p {margin-bottom: 0}
+.ops-demo-banner {display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 16px 0; padding: 9px 12px; background: var(--warn-bg); color: var(--warn-ink); border-radius: 8px}
+.ops-demo-banner strong {font-size: 12px; letter-spacing: .06em}
+.ops-kpis, .ops-grid {display: grid; gap: 14px; margin: 14px 0}
+.ops-kpis {grid-template-columns: repeat(4, minmax(0, 1fr))}
+.ops-grid {grid-template-columns: repeat(2, minmax(0, 1fr))}
+.ops-card {min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 17px; margin: 14px 0}
+.ops-kpis .ops-card, .ops-grid .ops-card {margin: 0}
+.ops-kpis strong {display: block; font-size: 30px; line-height: 1.3; margin: 4px 0}
+.ops-kpis .ops-kpi-text {font-size: 22px; margin-top: 11px}
+.ops-kpis small, .ops-incident small, .ops-target {color: var(--muted)}
+.ops-target {display: block; overflow-wrap: anywhere}
+.ops-card h2, .ops-workspace h2 {margin: 0 0 4px}
+.ops-card > p {margin: 0 0 12px}
+.ops-empty {color: var(--muted); padding: 18px 0}
+.ops-plot {display: flex; gap: 8px; height: 117px}
+.ops-scale {font-size: 11px; color: var(--muted); display: grid; align-content: space-between; white-space: nowrap}
+.ops-bars {display: flex; flex: 1; gap: 3px; border-bottom: 1px solid var(--line); background: repeating-linear-gradient(to top, var(--line) 0 1px, transparent 1px 33.33%); min-width: 0}
+.ops-bars button {min-width: 0; flex: 1; display: flex; align-items: end; background: transparent; padding: 0; border: 0; border-radius: 2px}
+.ops-bars span {width: 100%; display: block; background: var(--chart); border-radius: 3px 3px 0 0; pointer-events: none}
+.ops-bars .ops-bar-failed span {background: var(--bad-ink)}
+.ops-bars button[aria-pressed="true"] {box-shadow: inset 0 0 0 1px var(--accent); background: var(--subtle)}
+.ops-axis {display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; padding-top: 5px}
+.ops-trend .ops-point {margin: 10px 0 0; font-size: 12px; min-height: 2lh}
+.ops-chip {display: inline-block; padding: 3px 8px; border-radius: 5px; background: var(--subtle); white-space: nowrap}
+.ops-critical {color: var(--bad-ink); background: var(--bad-bg)}
+.ops-positive {color: var(--good-ink); background: var(--good-bg)}
+.ops-topology {display: grid; grid-template-columns: minmax(0, 3fr) minmax(170px, 1fr); gap: 14px}
+.ops-flow {height: 400px; min-width: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--subtle); overflow: hidden}
+.ops-flow .react-flow {--xy-edge-stroke-default: var(--muted); --xy-background-pattern-dots-color-default: var(--line)}
+.ops-node {width: 132px; padding: 8px 5px; text-align: center; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; font-size: 12px}
+.ops-node small, .ops-layers span {display: block; color: var(--muted)}
+.ops-node-selected {border: 2px solid var(--accent)}
+.ops-node-detail, .ops-layers > div {background: var(--subtle); border: 1px solid var(--line); border-radius: 8px; padding: 12px; min-width: 0}
+.ops-node-detail select {width: 100%; min-width: 0}
+.ops-node-detail dd, .ops-facts dd {margin: 0 0 8px; overflow-wrap: anywhere}
+.ops-node-detail dt, .ops-facts dt {font-weight: 600}
+.ops-node-detail dd a {display: block}
+.ops-incident {display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line)}
+.ops-incident a {margin-left: auto}
+.ops-workspace > .ops-card:last-child > button {margin-top: 12px}
+.ops-diagnosis {margin: 12px 0}
+.ops-layers {display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 8px}
+.ops-layers small {overflow-wrap: anywhere; color: var(--bad-ink)}
+summary {cursor: pointer}
+@media (max-width: 1050px) {.ops-kpis {grid-template-columns: repeat(2, minmax(0, 1fr))}}
+@media (max-width: 660px) {
+  .ops-grid, .ops-topology {grid-template-columns: minmax(0, 1fr)}
+  .ops-flow {height: 330px}
+  .ops-layers {grid-template-columns: repeat(2, minmax(0, 1fr))}
+  .ops-shell .aside-bottom {display: block; margin-top: 8px}
+  header {gap: 8px}
+  .probe-form label:first-child {min-width: min(240px, 100%)}
+  input, select {max-width: 100%}
+}
+@media (max-width: 375px) {
+  .ops-kpis {gap: 8px}
+  .ops-card {padding: 12px}
+}
+
+.ops-scale > span {display: block}
+.ops-shell nav button[aria-current="page"] {font-weight: 700}
+.ops-flow .react-flow__controls-button {background: var(--surface); color: var(--ink); border-color: var(--line)}
+.ops-flow .react-flow__controls-button:hover {background: var(--subtle)}
+.ops-flow .react-flow__attribution {background: var(--surface)}
+.ops-flow .react-flow__attribution a {color: var(--muted)}
+@media (max-width: 900px) {.ops-shell .aside-bottom {display: block; margin-top: 8px}}
+.ops-header-actions {display: flex; align-items: end; gap: 10px; flex-wrap: wrap}
+.ops-workspace-link {display: inline-block; padding: 5px 10px; border: 1px solid var(--accent); border-radius: 5px; font-weight: 600; text-decoration: none}
+.ops-workspace-link:hover {background: var(--subtle)}
+@media (max-width: 540px) {
+  .ops-main header:has(.ops-header-actions) {flex-wrap: wrap}
+  .ops-header-actions {width: 100%; justify-content: space-between}
+}

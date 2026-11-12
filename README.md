@@ -1,5 +1,9 @@
 # NetGuardian — Network Diagnostics & Evidence-Based Troubleshooting Platform
 
+Explore the fictional hotel dashboard on the web app home page after starting NetGuardian. It
+requires no workspace token and uses only simulated observations. See
+[Hospitality IT Operations](docs/product/HOSPITALITY_OPERATIONS.md).
+
 **English** · [简体中文](README.zh-CN.md)
 
 NetGuardian helps IT teams investigate why a service is unreachable by checking
@@ -92,7 +96,7 @@ $workspaceToken
 uv run --locked python -m scripts.run_windows --migrate
 ```
 
-Open [the local dashboard](http://127.0.0.1:3000), enter the test workspace token printed
+Open [the local workspace](http://127.0.0.1:3000/workspace) and enter the test workspace token printed
 in PowerShell. The empty origin list lets you explore the UI
 without enabling probes. Use a fresh checkout or back up an existing database
 before migration. Keep a stable Worker location ID when retaining observations

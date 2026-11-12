@@ -59,7 +59,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Open [the local interface](http://127.0.0.1:3000) and enter the workspace token.
+Open [the local workspace](http://127.0.0.1:3000/workspace) and enter the workspace token.
 The Web proxy uses `http://127.0.0.1:8000` by default. Override `NETGUARDIAN_API_URL`
 only with a trusted API origin. Browser users cannot select the proxy destination.
 The API buffers at most 64 KiB per request before JSON parsing, with a 10-second

@@ -11,7 +11,7 @@ PostgreSQL password or percent-encode URL-reserved characters in the connection 
 
 Run `docker compose config --quiet`, then `docker compose up --build -d`.
 The migration service completes before API startup; worker and web wait for API health.
-Open http://127.0.0.1:3000 and enter a configured workspace token. PostgreSQL has no host
+Open http://127.0.0.1:3000/workspace and enter a configured workspace token. PostgreSQL has no host
 port. `docker compose down` stops services while retaining the database volume.
 Do not use `down -v` unless intentionally deleting all stored data.
 
