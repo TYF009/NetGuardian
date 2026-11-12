@@ -84,7 +84,7 @@ $workspaceToken
 uv run --locked python -m scripts.run_windows --migrate
 ```
 
-打开[本地控制台](http://127.0.0.1:3000)，输入 PowerShell 显示的测试工作区令牌。目标白名单为空时可以浏览界面。请使用全新检出目录，或在迁移前备份现有数据库。如果要跨会话保留观测并进行比较，请保持 Worker 位置标识稳定。
+打开[本地工作区](http://127.0.0.1:3000/workspace)，输入 PowerShell 显示的测试工作区令牌。目标白名单为空时可以浏览界面。请使用全新检出目录，或在迁移前备份现有数据库。如果要跨会话保留观测并进行比较，请保持 Worker 位置标识稳定。
 
 [本地开发与 Agent 注册指南](docs/operations/LOCAL_DEVELOPMENT.md) · [就绪检查、备份与故障排查手册](docs/operations/RUNBOOK.md)
 

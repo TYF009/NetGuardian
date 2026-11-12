@@ -1,8 +1,8 @@
 # Hospitality IT operations UI
 
-Open /demo to explore Aster Quay Hotel without a token. Every asset, connection,
+Open the home page (or /demo) to explore Aster Quay Hotel without a token. Every asset, connection,
 incident and observation on that route is simulated. The route uses a checked-in
-fixture and has no API client, credential state, or control actions. The root
+fixture and has no API client, credential state, or control actions. The /workspace
 route is the authenticated workspace. Credentials stay in its component memory,
 and navigating away aborts its in-flight requests.
 

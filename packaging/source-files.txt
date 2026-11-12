@@ -99,6 +99,8 @@ docs/product/ACCEPTANCE_MATRIX.md
 legacy_v2.py
 .streamlit/config.toml
 web/app/demo/page.tsx
+web/app/demo/hospitality-dashboard.tsx
+web/app/workspace/page.tsx
 web/app/demo/scenario.ts
 web/app/demo/topology.tsx
 web/app/operations.css
