@@ -98,3 +98,13 @@ packaging/README.md
 docs/product/ACCEPTANCE_MATRIX.md
 legacy_v2.py
 .streamlit/config.toml
+web/app/demo/page.tsx
+web/app/demo/scenario.ts
+web/app/demo/topology.tsx
+web/app/operations.css
+web/app/operations/diagnostic-layers.tsx
+web/app/operations/theme.tsx
+web/app/operations/trend.tsx
+web/app/operations/workspace-dashboard.tsx
+web/lib/operations.ts
+docs/product/HOSPITALITY_OPERATIONS.md

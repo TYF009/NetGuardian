@@ -1,5 +1,9 @@
 # NetGuardian — Network Diagnostics & Evidence-Based Troubleshooting Platform
 
+Explore the fictional hotel dashboard at `/demo` after starting the web app. It
+requires no workspace token and uses only simulated observations. See
+[Hospitality IT Operations](docs/product/HOSPITALITY_OPERATIONS.md).
+
 **English** · [简体中文](README.zh-CN.md)
 
 NetGuardian helps IT teams investigate why a service is unreachable by checking
